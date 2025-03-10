@@ -6,7 +6,9 @@ export const prerender = false;
 const pb = Astro.locals.pb;
 if (Astro.request.method === "POST") {
     const data = await Astro.request.formData();
-    console.log(data);
+    const personne = await pb.collection("personnes").create(data);
+
+    return Astro.redirect(`/personnes/${personne.id}-${personne.nom}`);
 }
 
 ---
@@ -37,7 +39,7 @@ if (Astro.request.method === "POST") {
     </label>
     <label>
         nom
-        <input type="date" name="nom" />
+        <input type="text" name="nom" />
     </label>
 
         <button>Envoyer</button>
