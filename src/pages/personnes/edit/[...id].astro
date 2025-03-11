@@ -1,11 +1,16 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
+import type { PersonnesResponse } from "../../../pocketbase-typegen";
 
 export const prerender = false;
 
+const id = Astro.params.id;
+
 const pb = Astro.locals.pb;
 
-const personne = await pb.collection("personnes").getOne(id!);
+const personne = id
+ ? await pb.collection("personnes").getOne(id!)
+ : ({} as PersonnesResponse);
 
 
 if (Astro.request.method === "POST") {
@@ -52,15 +57,22 @@ function formatDate(date: string) {
         nom
         <input type="text" name="nom" />
     </label>
-    <label>
-        profession
-        <select name="profession" multiple >
-            {
-                Object.entries(PersonnesProfessionOptions).map(([key, value]) => (
-                    <option selected={PageTransitionEvent.profession.includes{key}} value={key}>{value}</option>
-                ))
-            }
-    </label>
+    <!-- <fieldset class="block! col-span-2">
+        <legend>Profession</legend>
+        {
+          Object.entries(PersonnesProfessionOptions).map(([key, value]) => (
+            <label>
+              {key}
+              <input
+                type="checkbox"
+                name="profession"
+                checked={personne.profession?.includes(value)}
+                value={value}
+              />
+            </label>
+          ))
+        }
+      </fieldset> -->
 
         <button>Envoyer</button>
     </form>
