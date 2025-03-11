@@ -41,6 +41,15 @@ if (Astro.request.method === "POST") {
         nom
         <input type="text" name="nom" />
     </label>
+    <label>
+        profession
+        <select name="profession" multiple >
+            {
+                Object.entries(PersonnesProfessionOptions).map(([key, value]) => (
+                    <option selected={PageTransitionEvent.profession.includes{key}} value={key}>{value}</option>
+                ))
+            }
+    </label>
 
         <button>Envoyer</button>
     </form>
