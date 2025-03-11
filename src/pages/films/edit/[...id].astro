@@ -1,0 +1,46 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+
+export const prerender = false;
+
+const pb = Astro.locals.pb;
+
+if (Astro.request.method === "POST") {
+  const data = await Astro.request.formData();
+  const film = await pb.collection("films").create(data);
+  return Astro.redirect(`/films/${film.id}-${encodeURIComponent(film.titre)}`);
+}
+
+const personne = await pb.collection("personnes").getFullList();
+---
+
+<Layout pageTitle="Edit de film">
+
+  <form method="POST">
+    <label
+      >Date de sortie
+      <input type="date" name="date_sortie" value="/" />
+    </label>
+    <label
+      >duree
+      <input type="text" name="duree" value="/" />
+    </label>
+    <label
+      >langue
+      <input type="text" name="langue" value="/" />
+    </label>
+    <label
+      >synopsis
+      <input type="text" name="synopsis" value="/" />
+    </label>
+    <label
+      >titre
+      <input type="text" name="titre" value="/" />
+    </label>
+    <label
+      >producteur
+      <select name="producteur" value="/"></select>
+    </label>
+    <button>envoyer</button>
+  </form>
+</Layout>
