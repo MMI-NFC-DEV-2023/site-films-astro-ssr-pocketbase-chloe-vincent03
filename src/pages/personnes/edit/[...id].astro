@@ -4,11 +4,21 @@ import Layout from "../../../layouts/Layout.astro";
 export const prerender = false;
 
 const pb = Astro.locals.pb;
+
+const personne = await pb.collection("personnes").getOne(id!);
+
+
 if (Astro.request.method === "POST") {
     const data = await Astro.request.formData();
-    const personne = await pb.collection("personnes").create(data);
+    const personne = await (id
+    ? pb.collection("personnes").update(id, data)
+    : pb.collection("personnes").create(data));
 
     return Astro.redirect(`/personnes/${personne.id}-${personne.nom}`);
+}
+
+function formatDate(date: string) {
+    return new Date(date).toISOString().split("T")[0];
 }
 
 ---
@@ -17,6 +27,7 @@ if (Astro.request.method === "POST") {
     <h1>Edit personne</h1>
 
     <form class="*:contents grid grid-cols-2" method="post">
+        <input type="hidden" name="id" value={personne.id} />
         <label> 
             Nationalite
         <select name="Nationalite" multiple >
